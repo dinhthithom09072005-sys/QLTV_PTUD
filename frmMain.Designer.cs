@@ -48,6 +48,7 @@
             this.phiếuMượnToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tàiLiệuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trợGiúpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hướngDẫnSửDụngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -166,14 +167,14 @@
             // 
             this.phiếuMượnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("phiếuMượnToolStripMenuItem.Image")));
             this.phiếuMượnToolStripMenuItem.Name = "phiếuMượnToolStripMenuItem";
-            this.phiếuMượnToolStripMenuItem.Size = new System.Drawing.Size(231, 34);
+            this.phiếuMượnToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.phiếuMượnToolStripMenuItem.Text = "Phiếu mượn";
             // 
             // phiếuPhạtToolStripMenuItem
             // 
             this.phiếuPhạtToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("phiếuPhạtToolStripMenuItem.Image")));
             this.phiếuPhạtToolStripMenuItem.Name = "phiếuPhạtToolStripMenuItem";
-            this.phiếuPhạtToolStripMenuItem.Size = new System.Drawing.Size(231, 34);
+            this.phiếuPhạtToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.phiếuPhạtToolStripMenuItem.Text = "Phiếu phạt";
             // 
             // báoCáoToolStripMenuItem
@@ -189,30 +190,39 @@
             // 
             // phiếuPhạtToolStripMenuItem1
             // 
+            this.phiếuPhạtToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("phiếuPhạtToolStripMenuItem1.Image")));
             this.phiếuPhạtToolStripMenuItem1.Name = "phiếuPhạtToolStripMenuItem1";
-            this.phiếuPhạtToolStripMenuItem1.Size = new System.Drawing.Size(231, 34);
+            this.phiếuPhạtToolStripMenuItem1.Size = new System.Drawing.Size(270, 34);
             this.phiếuPhạtToolStripMenuItem1.Text = "Phiếu phạt";
             // 
             // phiếuMượnToolStripMenuItem1
             // 
             this.phiếuMượnToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("phiếuMượnToolStripMenuItem1.Image")));
             this.phiếuMượnToolStripMenuItem1.Name = "phiếuMượnToolStripMenuItem1";
-            this.phiếuMượnToolStripMenuItem1.Size = new System.Drawing.Size(231, 34);
+            this.phiếuMượnToolStripMenuItem1.Size = new System.Drawing.Size(270, 34);
             this.phiếuMượnToolStripMenuItem1.Text = "Phiếu mượn";
             // 
             // tàiLiệuToolStripMenuItem
             // 
             this.tàiLiệuToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("tàiLiệuToolStripMenuItem.Image")));
             this.tàiLiệuToolStripMenuItem.Name = "tàiLiệuToolStripMenuItem";
-            this.tàiLiệuToolStripMenuItem.Size = new System.Drawing.Size(231, 34);
+            this.tàiLiệuToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.tàiLiệuToolStripMenuItem.Text = "Tài liệu";
             // 
             // trợGiúpToolStripMenuItem
             // 
+            this.trợGiúpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hướngDẫnSửDụngToolStripMenuItem});
             this.trợGiúpToolStripMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.trợGiúpToolStripMenuItem.Name = "trợGiúpToolStripMenuItem";
             this.trợGiúpToolStripMenuItem.Size = new System.Drawing.Size(106, 30);
             this.trợGiúpToolStripMenuItem.Text = "Trợ giúp";
+            // 
+            // hướngDẫnSửDụngToolStripMenuItem
+            // 
+            this.hướngDẫnSửDụngToolStripMenuItem.Name = "hướngDẫnSửDụngToolStripMenuItem";
+            this.hướngDẫnSửDụngToolStripMenuItem.Size = new System.Drawing.Size(303, 34);
+            this.hướngDẫnSửDụngToolStripMenuItem.Text = "Hướng dẫn sử dụng";
             // 
             // frmMain
             // 
@@ -252,5 +262,6 @@
         private System.Windows.Forms.ToolStripMenuItem phiếuPhạtToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem phiếuMượnToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem tàiLiệuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hướngDẫnSửDụngToolStripMenuItem;
     }
 }
