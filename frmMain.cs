@@ -31,5 +31,35 @@ namespace PTUD_QLTV
         {
 
         }
+
+        private void panelMain_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+     
+        }
+        private void LoadForm(Form frm)
+        {
+            // Xóa form con cũ nếu có
+            panelMain.Controls.Clear();
+
+            // Thiết lập form con để nhúng vào panel
+            frm.TopLevel = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+
+         
+            // Thêm form con vào panel và hiển thị
+            panelMain.Controls.Add(frm);
+            frm.Show();
+        }
+
+        private void phiếuMượnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm(new frmMuonTra());
+        }
     }
 }
