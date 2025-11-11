@@ -16,7 +16,17 @@ namespace PTUD_QLTV
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmDMDG());
+            using (FrmDangnhap loginForm = new FrmDangnhap())
+            {
+                if (loginForm.ShowDialog() == DialogResult.OK)
+                {
+                    Application.Run(new frmMain());
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
         }
     }
 }
