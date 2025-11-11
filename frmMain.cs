@@ -61,5 +61,32 @@ namespace PTUD_QLTV
         {
             LoadForm(new frmMuonTra());
         }
+
+        private void kếtThúcToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            FrmDangnhap frmLogin = new FrmDangnhap();
+            if (frmLogin.ShowDialog() == DialogResult.OK)
+            {
+                // Nếu đăng nhập thành công, hiển thị lại form main
+                this.Show();
+            }
+            else
+            {
+                // Nếu bấm hủy, thoát chương trình
+                this.Close();
+            }
+        }
+
+        private void phiếuPhạtToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm(new frmPP());
+        }
+
+        private void tiêuĐềTàiLiệuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm(new frmTaiLieu());
+        }
     }
 }

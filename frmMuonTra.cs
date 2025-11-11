@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,7 @@ namespace PTUD_QLTV
         SqlConnection conn;
         SqlDataAdapter da;
         DataTable dt;
+        DataTable dtDSTL = new DataTable();
         string str, sql;
         string maPM_DangChon = ""; // Biến toàn cục để lưu mã phiếu mượn đang chọn
         public frmMuonTra()
@@ -68,7 +70,6 @@ namespace PTUD_QLTV
             da = new SqlDataAdapter(sql, conn);
             dt = new DataTable();
             da.Fill(dt);
-
             AutoCompleteStringCollection auto = new AutoCompleteStringCollection();
             foreach (DataRow row in dt.Rows)
             {
@@ -83,9 +84,9 @@ namespace PTUD_QLTV
             dt = new DataTable();
             da.Fill(dt);
             cboTenTT.DataSource = dt;
-            cboTenTT.DisplayMember = "Ten_Thu_Thu"; //Hiển thị tên thủ thư vào combobox
+            cboTenTT.DisplayMember = "Ten_Thu_Thu";
             cboTenTT.ValueMember = "Ma_Thu_Thu";
-            cboTenTT.SelectedIndex = -1; // không chọn mặc định
+            cboTenTT.SelectedIndex = -1;
         }
         private void LoadKieuMuon()
         {
@@ -118,7 +119,17 @@ namespace PTUD_QLTV
             dt = new DataTable();
             da.Fill(dt);
             grdDSPM.DataSource = dt;
+            grdDSPM.Columns["Ma_Phieu_Muon"].HeaderText = "Mã phiếu mượn";
+            grdDSPM.Columns["So_The_Doc_Gia"].HeaderText = "Số thẻ ĐG";
+            grdDSPM.Columns["Ma_Kieu_Muon"].HeaderText = "Kiểu mượn";
+            grdDSPM.Columns["Ngay_Muon"].HeaderText = "Ngày mượn";
+            grdDSPM.Columns["Han_Tra"].HeaderText = "Hạn trả";
+            grdDSPM.Columns["Ngay_Thuc_Tra"].HeaderText = "Ngày thực trả";
+            grdDSPM.Columns["Ma_Thu_Thu"].HeaderText = "Mã thủ thư";
+            grdDSPM.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
+
+       
         private void ResetForm()
         {
             txtSoTheDG.Clear();
@@ -148,59 +159,57 @@ namespace PTUD_QLTV
         {
             dateNgayThucTra.CustomFormat = "dd/MM/yyyy";
         }
-
-        DataTable dtDSTL = new DataTable();
         private void SetupgrdDSTLmuon()
         {
-            dtDSTL.Columns.Add("Mã tài liệu");
-            dtDSTL.Columns.Add("Tên tài liệu");
-            dtDSTL.Columns.Add("Mô tả");
+            if (!dtDSTL.Columns.Contains("Ma_Tai_Lieu"))
+                dtDSTL.Columns.Add("Ma_Tai_Lieu", typeof(string));
+
+            if (!dtDSTL.Columns.Contains("Ten_TTTL"))
+                dtDSTL.Columns.Add("Ten_TTTL", typeof(string));
+
+            if (!dtDSTL.Columns.Contains("Mo_Ta"))
+                dtDSTL.Columns.Add("Mo_Ta", typeof(string));
+
             grdDSTLmuon.DataSource = dtDSTL;
-            grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+            grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; 
+      /*
             btngrdXoa.Text = "Xóa"; //đặt tên cột
-            grdDSTLmuon.Columns["btngrdXoa"].DisplayIndex = grdDSTLmuon.Columns.Count - 1; //đặt cột xóa ở cuối cùng
-
+            grdDSTLmuon.Columns["btngrdXoa"].DisplayIndex = 0;
+            grdDSTLmuon.Columns["btngrdXoa"].FillWeight = 60;*/
         }
 
         private void grdDSTLmuon_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Bỏ qua header row
-            if (e.RowIndex < 0) return;
-            // Kiểm tra nếu cột "Xóa" được nhấp
-            if (grdDSTLmuon.Columns[e.ColumnIndex].Name == "btngrdXoa")
-            {
-                grdDSTLmuon.EndEdit(); // kết thúc chỉnh sửa, tránh lỗi RowIndex sai
-                //Lấy dt được gán cho grdDSTLmuon
-                DataTable dt = (DataTable)grdDSTLmuon.DataSource;
-                if(dt != null && e.RowIndex < dt.Rows.Count)
-                {
-                    dt.Rows[e.RowIndex].Delete();
-                    grdDSTLmuon.ClearSelection();
-                }
-            }
+            if (grdDSTLmuon.Columns[e.ColumnIndex].Name == "btngrdXoa" && e.RowIndex >= 0)
+                grdDSTLmuon.Rows.RemoveAt(e.RowIndex);
         }
-
-        private void txtMaTT_TextChanged(object sender, EventArgs e)
+        private string TaoMaPMTuDong()
         {
-      
+            sql = "SELECT TOP 1 Ma_Phieu_Muon FROM PHIEU_MUON ORDER BY Ma_Phieu_Muon DESC";
+            string lastMa = "";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                object result = cmd.ExecuteScalar();
+                if (result != null)
+                    lastMa = result.ToString();
+            }
 
+            int number = 1;
+            if (!string.IsNullOrEmpty(lastMa) && lastMa.Length > 2)
+                number = int.Parse(lastMa.Substring(2)) + 1;
+
+            return "PM" + number.ToString("D2");
         }
 
         private void btnsave_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(maPM_DangChon))
-            {
-                // Đang ở chế độ sửa (vì đang có mã phiếu mượn được chọn)
-                UpdatePM();
-            }
+                UpdatePM();// Đang ở chế độ sửa (vì đang có mã phiếu mượn được chọn)
             else
-            {
-                // Đang ở chế độ tạo mới
                 LuuPMmoi();
-            }
         }
-       private void LuuPMmoi()
+        private void LuuPMmoi()
         {
             if (string.IsNullOrWhiteSpace(txtSoTheDG.Text) ||
                 cboTenTT.SelectedIndex == -1 ||
@@ -209,51 +218,37 @@ namespace PTUD_QLTV
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin phiếu mượn");
                 return;
             }
-
-            //Tạo Ma_Phieu_Muon tự động bắt đầu từ phần đuôi PM lớn nhất
-            string maPM = "";
-            using (SqlCommand cmd1 = new SqlCommand("SELECT TOP 1 Ma_Phieu_Muon FROM PHIEU_MUON ORDER BY Ma_Phieu_Muon DESC", conn))
-            {
-                object result = cmd1.ExecuteScalar();
-                if (result != null)
-                {
-                    string lastMaPM = result.ToString();
-                    int number = int.Parse(lastMaPM.Substring(2)) + 1; //cắt từ vtri thứ 2 chỉ lấy sau PM; int.Parse chuyển chuỗi thành số
-                    maPM = "PM" + number.ToString("D2"); //D2: định dạng số có 2 chữ số
-                }
-                else
-                {
-                    maPM = "PM01"; // Nếu chưa có phiếu mượn nào
-                }
-            }
-            SqlTransaction tran = conn.BeginTransaction();
             try
             {
+                string maPM = TaoMaPMTuDong();
                 //Lưu DL vào phiếu mượn
-                SqlCommand cmd = new SqlCommand(@"INSERT INTO PHIEU_MUON (Ma_Phieu_Muon, So_The_Doc_Gia, Ma_Thu_Thu, Ma_Kieu_Muon, Ngay_Muon, Ngay_Thuc_Tra) VALUES (@MaPM, @SoTheDG, @MaTT, @MaKieuMuon, @NgayMuon, @NgayThucTra)", conn, tran);
-                cmd.Parameters.AddWithValue("@MaPM", maPM);
-                cmd.Parameters.AddWithValue("@SoTheDG", txtSoTheDG.Text);
-                cmd.Parameters.AddWithValue("@MaTT", cboTenTT.SelectedValue);
-                cmd.Parameters.AddWithValue("@MaKieuMuon", cboKieuMuon.SelectedValue);
-                cmd.Parameters.AddWithValue("@NgayMuon", dateNgayMuon.Value);
-                if (dateNgayThucTra.CustomFormat == " ")
-                    cmd.Parameters.AddWithValue("@NgayThucTra", DBNull.Value);
-                else
-                    cmd.Parameters.AddWithValue("@NgayThucTra", dateNgayThucTra.Value);
-                cmd.ExecuteNonQuery();
+                string sqlInsertPM = @"INSERT INTO PHIEU_MUON (Ma_Phieu_Muon, So_The_Doc_Gia, Ma_Thu_Thu, Ma_Kieu_Muon, Ngay_Muon, Ngay_Thuc_Tra) VALUES (@MaPM, @SoTheDG, @MaTT, @MaKieuMuon, @NgayMuon, @NgayThucTra)";
+                using (SqlCommand cmd = new SqlCommand(sqlInsertPM, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaPM", maPM);
+                    cmd.Parameters.AddWithValue("@SoTheDG", txtSoTheDG.Text);
+                    cmd.Parameters.AddWithValue("@MaTT", cboTenTT.SelectedValue);
+                    cmd.Parameters.AddWithValue("@MaKieuMuon", cboKieuMuon.SelectedValue);
+                    cmd.Parameters.AddWithValue("@NgayMuon", dateNgayMuon.Value);
+                    if (dateNgayThucTra.CustomFormat == " ")
+                        cmd.Parameters.AddWithValue("@NgayThucTra", DBNull.Value);
+                    else
+                        cmd.Parameters.AddWithValue("@NgayThucTra", dateNgayThucTra.Value);
+                    cmd.ExecuteNonQuery();
+                }
 
                 //Lưu vào CT_PHIEU_MUON
                 foreach (DataRow row in dtDSTL.Rows)
                 {
-                    SqlCommand cmdCT = new SqlCommand(@"INSERT INTO CT_PHIEU_MUON(Ma_Phieu_Muon, Ma_Tai_Lieu, Mo_Ta)
-                  VALUES(@MaPM, @MaTL, @MoTa)", conn, tran);
-                    cmdCT.Parameters.AddWithValue("MaPM", maPM);
-                    cmdCT.Parameters.AddWithValue("@MaTL", row["Mã tài liệu"].ToString());
-                    cmdCT.Parameters.AddWithValue("@MoTa", row["Mô tả"].ToString());
-                    cmdCT.ExecuteNonQuery();
+                    string sqlInsertCT = @"INSERT INTO CT_PHIEU_MUON(Ma_Phieu_Muon, Ma_Tai_Lieu, Mo_Ta) VALUES(@MaPM, @MaTL, @MoTa)";
+                    using (SqlCommand cmdCT = new SqlCommand(sqlInsertCT, conn))
+                    {
+                        cmdCT.Parameters.AddWithValue("MaPM", maPM);
+                        cmdCT.Parameters.AddWithValue("@MaTL", row["Ma_Tai_Lieu"].ToString());
+                        cmdCT.Parameters.AddWithValue("@MoTa", row["Mo_Ta"].ToString());
+                        cmdCT.ExecuteNonQuery();
+                    }         
                 }
-                //Commit transaction nếu ko lỗi
-                tran.Commit();
                 MessageBox.Show("Tạo phiếu mượn thành công!");
 
                 //Xóa DL dtDSTL sau khi tạo PM thành công
@@ -269,24 +264,31 @@ namespace PTUD_QLTV
             }
             catch (Exception ex)
             {
-                tran.Rollback();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Lỗi khi lưu phiếu mượn:" +ex.Message);
             }
             LoadgrdDSPM();
         }
         private void UpdatePM()
         {
-            SqlTransaction tran = conn.BeginTransaction();
+            if(grdDSPM.CurrentRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu mượn để cập nhật");
+                return;
+            }
+            string maPM = grdDSPM.CurrentRow.Cells["Ma_Phieu_Muon"].Value.ToString();
             try
             {
+                SqlTransaction tran = conn.BeginTransaction();
+
                 // Cập nhật PHIEU_MUON
-                SqlCommand cmd = new SqlCommand(@"UPDATE PHIEU_MUON
-                SET So_The_Doc_Gia = @SoTheDG,
-                    Ma_Thu_Thu = @MaTT,
-                    Ma_Kieu_Muon = @MaKieuMuon,
-                    Ngay_Muon = @NgayMuon,
-                    Ngay_Thuc_Tra = @NgayThucTra
-                WHERE Ma_Phieu_Muon = @MaPM", conn, tran);
+                string sqlUpdatePM = @"UPDATE PHIEU_MUON
+                                   SET So_The_Doc_Gia = @SoTheDG,
+                                       Ma_Thu_Thu = @MaTT,
+                                       Ma_Kieu_Muon = @MaKieuMuon,
+                                       Ngay_Muon = @NgayMuon,
+                                       Ngay_Thuc_Tra = @NgayThucTra
+                                   WHERE Ma_Phieu_Muon = @MaPM";
+                SqlCommand cmd = new SqlCommand(sqlUpdatePM, conn, tran);
                 cmd.Parameters.AddWithValue("@MaPM", maPM_DangChon);
                 cmd.Parameters.AddWithValue("@SoTheDG", txtSoTheDG.Text);
                 cmd.Parameters.AddWithValue("@MaTT", cboTenTT.SelectedValue);
@@ -299,63 +301,38 @@ namespace PTUD_QLTV
                 cmd.ExecuteNonQuery();
 
                 // Xóa CT cũ để ghi lại
-                SqlCommand cmdDel = new SqlCommand("DELETE FROM CT_PHIEU_MUON WHERE Ma_Phieu_Muon = @MaPM", conn, tran);
-                cmdDel.Parameters.AddWithValue("@MaPM", maPM_DangChon);
-                cmdDel.ExecuteNonQuery();
-
-                //Lấy DataTable đang hiển thị trong grdDSTLmuon
-                DataTable dtgrd = (DataTable)grdDSTLmuon.DataSource;
-                if (dtgrd != null)
+                string sqlDelCT = "DELETE FROM CT_PHIEU_MUON WHERE Ma_Phieu_Muon = @MaPM";
+                using (SqlCommand cmdDel = new SqlCommand(sqlDelCT, conn, tran))
                 {
-                    //Duyệt tất cả các row trong grdDSTLmuon để thêm lại những row ko bị Deleted
-                    for (int i = 0; i < dtgrd.Rows.Count; i++)
+                    cmdDel.Parameters.AddWithValue("@MaPM", maPM_DangChon);
+                    cmdDel.ExecuteNonQuery();
+                }
+
+                //Thêm lại CT mới từ dtDSTL
+                foreach (DataRow row in dtDSTL.Rows)
+                {
+                    string sqlInsertCT = @"INSERT INTO CT_PHIEU_MUON(Ma_Phieu_Muon, Ma_Tai_Lieu, Mo_Ta) VALUES(@MaPM, @MaTL, @MoTa)";
+                    using (SqlCommand cmdCT = new SqlCommand(sqlInsertCT, conn, tran))
                     {
-                        DataRow row = dtgrd.Rows[i];
-                        if (row.RowState == DataRowState.Deleted) //nếu là row đã bị xóa thì bỏ qua
-                            continue;
-                        //Lấy giá trị của cột Mã tài liệu
-                        string maTL = "";
-                        if (dtgrd.Columns.Contains("Ma_Tai_Lieu"))
-                        {
-                            if (row["Ma_Tai_Lieu"] != DBNull.Value)
-                                maTL = row["Ma_Tai_Lieu"].ToString();
-                        }
-
-                        //Lấy mô tả
-                        string moTa = "";
-                        if (dtgrd.Columns.Contains("Mo_Ta"))
-                        {
-                            if (row["Mo_Ta"] != DBNull.Value)
-                                moTa = row["Mo_Ta"].ToString();
-                        }
-                        // Nếu không có MaTL thì bỏ qua (an toàn)
-                        if (string.IsNullOrEmpty(maTL))
-                            continue;
-
-                        //insert CTPM mới vào
-                        SqlCommand cmdCT = new SqlCommand(@"INSERT INTO CT_PHIEU_MUON(Ma_Phieu_Muon, Ma_Tai_Lieu, Mo_Ta)
-                    VALUES(@MaPM, @MaTL, @MoTa)", conn, tran);
-                        cmdCT.Parameters.AddWithValue("@MaPM", maPM_DangChon);
-                        cmdCT.Parameters.AddWithValue("@MaTL", maTL);
-                        cmdCT.Parameters.AddWithValue("@MoTa", moTa);
+                        cmdCT.Parameters.AddWithValue("MaPM", maPM_DangChon);
+                        cmdCT.Parameters.AddWithValue("@MaTL", row["Ma_Tai_lieu"].ToString());
+                        cmdCT.Parameters.AddWithValue("@MoTa", row["Mo_Ta"].ToString());
                         cmdCT.ExecuteNonQuery();
                     }
-                    }
-
-
+                }
+                
                 tran.Commit();
                 MessageBox.Show("Cập nhật phiếu mượn thành công!");
                 LoadgrdDSPM();
-
+                 
             }
             catch (Exception ex)
             {
-                tran.Rollback();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Lỗi khi cập nhật: " +ex.Message);
             }
+            ResetForm();
         }
 
-        
         private void txtMaTL_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMaTL.Text))
@@ -383,11 +360,13 @@ namespace PTUD_QLTV
                 MessageBox.Show("Vui lòng nhập Mã Tài liệu");
                 return;
             }
+           
             DataRow row = dtDSTL.NewRow();
-            row["Mã tài liệu"] = txtMaTL.Text;
-            row["Tên tài liệu"] = lblTenTL.Text;
-            row["Mô tả"] = txtMota.Text;
+            row["Ma_Tai_Lieu"] = txtMaTL.Text;
+            row["Ten_TTTL"] = lblTenTL.Text;
+            row["Mo_Ta"] = txtMota.Text;
             dtDSTL.Rows.Add(row);
+           
 
             //Làm trống các ô nhập liệu
             txtMaTL.Clear();
@@ -408,82 +387,83 @@ namespace PTUD_QLTV
             }
         }
 
+        private void LoadThongTingrdDSTLmuon(string maPM)
+        {
+            try
+            {
+                //Lấy thông tin các cột hiển thị trong grdDSTLmuon
+                maPM_DangChon = maPM;
+                string sqlCT = @"SELECT ct.Ma_Tai_Lieu, tttl.Ten_TTTL, ct.Mo_Ta
+                                 FROM CT_PHIEU_MUON ct
+                                 JOIN TAI_LIEU t ON ct.Ma_Tai_Lieu = t.Ma_Tai_Lieu
+                                 JOIN TTTL tttl on tttl.MaTTTL = t.MaTTTL
+                                 WHERE ct.Ma_Phieu_Muon = @MaPM";
+                SqlCommand cmd = new SqlCommand(sqlCT, conn);
+                cmd.Parameters.AddWithValue("@MaPM", maPM);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                dtDSTL.Clear(); // xóa data cũ từ bảng đã gọi ở biến toàn cục (ko cần gọi thêm new DataTable)
+                                // Đảm bảo dtDSTL có cột: "Mã tài liệu", "Tên tài liệu", "Mô tả"
+                da.Fill(dtDSTL);
 
+                grdDSTLmuon.DataSource = dtDSTL;
+                grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                /*
+                //Đặt lại tiêu đề cột
+                if(dtDSTL.Columns.Contains("Ma_Tai_Lieu"))
+                    dtDSTL.Columns["Ma_Tai_Lieu"].ColumnName = "Mã tài liệu";
+                if (dtDSTL.Columns.Contains("Ten_TTTL"))
+                    dtDSTL.Columns["Ten_TTTL"].ColumnName = "Tên tài liệu";
+                if (dtDSTL.Columns.Contains("Mo_Ta"))
+                    dtDSTL.Columns["Mo_Ta"].ColumnName = "Mô tả";
+                */
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải chi tiết phiếu mượn: " + ex.Message);
+            }
+        }
+        public void NapCT()
+        {
+            if(grdDSPM.CurrentRow == null|| grdDSPM.Rows.Count == 0)
+                return;
+            
+            int i = grdDSPM.CurrentRow.Index;
+            if (i < 0 || i >= grdDSPM.Rows.Count)
+                return;
+            //Hiển thị thông tin PM lên các ô nhập liệu
+            txtSoTheDG.Text = grdDSPM.Rows[i].Cells["So_The_Doc_Gia"].Value.ToString();
+            cboTenTT.SelectedValue = grdDSPM.Rows[i].Cells["Ma_Thu_Thu"].Value.ToString();
+            cboKieuMuon.SelectedValue = grdDSPM.Rows[i].Cells["Ma_Kieu_Muon"].Value.ToString();
+            dateNgayMuon.Value = Convert.ToDateTime(grdDSPM.Rows[i].Cells["Ngay_Muon"].Value);
+            if (grdDSPM.Rows[i].Cells["Ngay_Thuc_Tra"].Value != DBNull.Value && !string.IsNullOrWhiteSpace(grdDSPM.Rows[i].Cells["Ngay_Thuc_Tra"].Value.ToString()))
+            {
+                dateNgayThucTra.Value = Convert.ToDateTime(grdDSPM.Rows[i].Cells["Ngay_Thuc_Tra"].Value);
+                dateNgayThucTra.CustomFormat = "dd/MM/yyyy";
+            }
+            else
+            {
+                // Không hiển thị gì (ẩn format)
+                dateNgayThucTra.CustomFormat = " ";
+                dateNgayThucTra.Format = DateTimePickerFormat.Custom;
+            }
 
-    //CODE HIỂN THỊ CHI TIẾT PHIẾU MƯỢN KHI NHẤP VÀO GRĐ DSPM
-
+            //Hiển thị danh sách tài liệu mượn vào grdDSTLmuon
+            string maPM = grdDSPM.Rows[i].Cells["Ma_Phieu_Muon"].Value.ToString();
+            LoadThongTingrdDSTLmuon(maPM);
+            btnXoa.Enabled = true;
+            btnFix.Enabled = true;
+            KhoaChucNangbtn();
+        }
         private void grdDSPM_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if(e.RowIndex >= 0 && grdDSPM.Columns[e.ColumnIndex].Name == "btngrdDetail")
             {                 
                 string maPM = grdDSPM.Rows[e.RowIndex].Cells["Ma_Phieu_Muon"].Value.ToString();
-                HienThiCTPM(maPM);
+                NapCT();
                 KhoaONhapLieu();
             }    
         } 
-        private void HienThiCTPM(string maPM)
-        {
-            maPM_DangChon = maPM; // Lưu mã phiếu mượn đang chọn vào biến toàn cục
-            // Truy vấn chi tiết phiếu mượn từ cơ sở dữ liệu
-            string query = @"SELECT ct.Ma_Tai_Lieu, tttl.Ten_TTTL, ct.Mo_Ta
-                             FROM CT_PHIEU_MUON ct
-                             JOIN TAI_LIEU t ON ct.Ma_Tai_Lieu = t.Ma_Tai_Lieu
-                             JOIN TTTL tttl on tttl.MaTTTL = t.MaTTTL
-                             WHERE ct.Ma_Phieu_Muon = @MaPM";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@MaPM", maPM);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dtCTPM = new DataTable();
-            da.Fill(dtCTPM);
-
-            // Hiển thị chi tiết phiếu mượn trong grdDSTLmuon
-            //grdDSTLmuon.DataSource = dtCTPM;
-            // --- Chuyển dữ liệu từ dtCTPM (kết quả truy vấn) vào dtDSTL (DataTable dùng chung)
-            dtDSTL.Clear(); // xóa data cũ
-                            // Đảm bảo dtDSTL có cột: "Mã tài liệu", "Tên tài liệu", "Mô tả"
-            for (int i = 0; i < dtCTPM.Rows.Count; i++)
-            {
-                DataRow src = dtCTPM.Rows[i];
-                DataRow newRow = dtDSTL.NewRow();
-
-                // src có cột: Ma_Tai_Lieu, Ten_TTTL, Mo_Ta
-                if (dtCTPM.Columns.Contains("Ma_Tai_Lieu") && src["Ma_Tai_Lieu"] != DBNull.Value)
-                    newRow["Mã tài liệu"] = src["Ma_Tai_Lieu"].ToString();
-                if (dtCTPM.Columns.Contains("Ten_TTTL") && src["Ten_TTTL"] != DBNull.Value)
-                    newRow["Tên tài liệu"] = src["Ten_TTTL"].ToString();
-                if (dtCTPM.Columns.Contains("Mo_Ta") && src["Mo_Ta"] != DBNull.Value)
-                    newRow["Mô tả"] = src["Mo_Ta"].ToString();
-
-                dtDSTL.Rows.Add(newRow);
-            }
-            grdDSTLmuon.DataSource = dtDSTL;
-            //.....
-            //Hiển thị thông tin PM lên các ô nhập liệu
-            string sql = "select * from PHIEU_MUON where Ma_Phieu_Muon = @MaPM";
-                SqlCommand cmd1 = new SqlCommand(sql, conn);
-                cmd1.Parameters.AddWithValue("@MaPM", maPM);
-                SqlDataAdapter da1 = new SqlDataAdapter(cmd1);
-                DataTable dtPM = new DataTable();
-                da1.Fill(dtPM);
-                if (dtPM.Rows.Count > 0)
-                {
-                    txtSoTheDG.Text = dtPM.Rows[0]["So_The_Doc_Gia"].ToString();
-                    cboTenTT.SelectedValue = dtPM.Rows[0]["Ma_Thu_Thu"].ToString();
-                    cboKieuMuon.SelectedValue = dtPM.Rows[0]["Ma_Kieu_Muon"].ToString();
-                    dateNgayMuon.Value = Convert.ToDateTime(dtPM.Rows[0]["Ngay_Muon"]);
-                    if (dtPM.Rows[0]["Ngay_Thuc_Tra"] != DBNull.Value)
-                    {
-                        dateNgayThucTra.Value = Convert.ToDateTime(dtPM.Rows[0]["Ngay_Thuc_Tra"]);
-                        dateNgayThucTra.CustomFormat = "dd/MM/yyyy";
-                    }
-                    else
-                    {
-                        dateNgayThucTra.CustomFormat = " ";
-                    }
-                }
-            //Khóa giao diện thêm sửa xóa
-            KhoaChucNangbtn();
-        }
+       
         private void KhoaChucNangbtn()
         {
             txtMaTL.Clear();
@@ -574,6 +554,85 @@ namespace PTUD_QLTV
 
             }
         }
+        
+        private void btnFirst_Click(object sender, EventArgs e)
+        {
+            grdDSPM.ClearSelection();
+            grdDSPM.CurrentCell = grdDSPM[0, 0];
+            NapCT();
+        }
+        private void btnLast_Click(object sender, EventArgs e)
+        {
+            int i = grdDSPM.Rows.Count - 1;
+            grdDSPM.CurrentCell = grdDSPM[0, i];
+            NapCT();
+        }
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            int i = grdDSPM.CurrentRow.Index;
+            if (i < grdDSPM.Rows.Count - 1) //nếu chx đến dòng cuối cùng thì nhảy đến dòng tiếp
+            {
+                grdDSPM.CurrentCell = grdDSPM[0, i + 1];
+                NapCT();
+            }
+        }
+        private void btnPrv_Click(object sender, EventArgs e)
+        {
+            int i = grdDSPM.CurrentRow.Index;
+            if (i > 0)
+            {
+                grdDSPM.CurrentCell = grdDSPM[0, i - 1];
+                NapCT();
+            }
+        }
+
+        private void comTruong_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comTruong.SelectedIndex == -1 || string.IsNullOrWhiteSpace(comTruong.Text))
+                return;
+            sql = "select distinct " + comTruong.Text + " from PHIEU_MUON";
+            da = new SqlDataAdapter(sql, conn); //Khai báo đối tượng DataAdapter để lấy DL
+            DataTable dt1 = new DataTable(); //tạo DataTable
+            da.Fill(dt1);
+
+            comGT.DataSource = dt1; //Gán nguồn DL cho combogiaTri
+            comGT.DisplayMember = comTruong.Text;
+            comGT.ValueMember = comTruong.Text;
+        }
+
+        private void btnFilter_Click(object sender, EventArgs e)
+        {
+            dt.Clear();
+
+            string truong = comTruong.Text;
+            sql = $"SELECT * FROM PHIEU_MUON WHERE {truong} = @giatri";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            if (truong == "Ngay_Muon" || truong == "Han_Tra")
+            {
+                DateTime ngay = Convert.ToDateTime(comGT.Text);
+                cmd.Parameters.AddWithValue("@giatri", ngay.ToString("yyyy-MM-dd"));
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@giatri", comGT.Text);
+            }
+
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            grdDSPM.DataSource = dt;
+            grdDSPM.Refresh();
+            NapCT();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            comTruong.SelectedIndex = -1;
+            comGT.SelectedIndex = -1;
+            LoadgrdDSPM();
+            grdDSPM.Refresh();
+            ResetForm();
+        }
+
         private void btnBack_Click(object sender, EventArgs e)
         {
             ResetForm();
