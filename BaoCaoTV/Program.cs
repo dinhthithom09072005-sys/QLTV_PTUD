@@ -1,11 +1,10 @@
-﻿using DevExpress.XtraReports.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PTUD_QLTV
+namespace BaoCaoTV
 {
     internal static class Program
     {
@@ -17,7 +16,7 @@ namespace PTUD_QLTV
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmBaocao());
+            Application.Run(new PTUD_QLTV.FrmBaoCao());
         }
     }
 }
