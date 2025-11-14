@@ -1,3 +1,0 @@
-select * from QLTV_2  
-
-
