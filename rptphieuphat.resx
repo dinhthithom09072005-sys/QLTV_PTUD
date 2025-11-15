@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="thuvienneu" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\thuvienneu.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="customSqlQuery1.Sql" xml:space="preserve">
+    <value>SELECT Ngay_Phat AS Ngayphat, 
+	   COUNT(P.Ma_Phieu_Phat) AS Soluongphieuphat, 
+	   SUM(Nop_Phat) AS Tongtienphat
+FROM CT_PHIEU_PHAT CT INNER JOIN PHIEU_PHAT P ON P.Ma_Phieu_Phat = CT.Ma_Phieu_Phat 
+GROUP BY Ngay_Phat</value>
+  </data>
+  <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iTmdheXBoYXQiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJTb2x1b25ncGhpZXVwaGF0IiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iVG9uZ3RpZW5waGF0IiBUeXBlPSJEZWNpbWFsIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
   </data>
 </root>

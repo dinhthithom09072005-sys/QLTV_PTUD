@@ -70,5 +70,16 @@ namespace PTUD_QLTV.Properties {
                 this["RememberMe"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=LAPTOP-UVIPITP3\\SQLEXPRESS;Initial Catalog=QLTV_2;Integrated Security" +
+            "=True;Encrypt=False")]
+        public string QLTV_2ConnectionString {
+            get {
+                return ((string)(this["QLTV_2ConnectionString"]));
+            }
+        }
     }
 }

@@ -117,4 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="xrTable1.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="customSqlQuery1.Sql" xml:space="preserve">
+    <value>select PM.Ma_Phieu_Muon,
+       PM.So_The_Doc_Gia,
+       DG.Ho_Ten,
+       PM.Ngay_Muon,
+       PM.Han_Tra,
+       PM.Ngay_Thuc_Tra
+FROM PHIEU_MUON PM
+JOIN DOC_GIA DG ON DG.So_The_Doc_Gia = PM.So_the_Doc_Gia 
+WHERE PM.Ngay_Thuc_Tra &gt; PM.Han_Tra 
+Order by PM.Ngay_Thuc_Tra</value>
+  </data>
+  <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iTWFfUGhpZXVfTXVvbiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJTb19UaGVfRG9jX0dpYSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJIb19UZW4iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTmdheV9NdW9uIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iSGFuX1RyYSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9Ik5nYXlfVGh1Y19UcmEiIFR5cGU9IkRhdGVUaW1lIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+  </data>
 </root>
