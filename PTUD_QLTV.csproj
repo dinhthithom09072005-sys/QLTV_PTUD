@@ -93,18 +93,7 @@
     </Compile>
     <Compile Include="frmBaocao.Designer.cs">
       <DependentUpon>frmBaocao.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmDangnhap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmDangnhap.Designer.cs">
-      <DependentUpon>FrmDangnhap.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmlogindemo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmlogindemo.Designer.cs">
-      <DependentUpon>frmlogindemo.cs</DependentUpon>
+   
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
