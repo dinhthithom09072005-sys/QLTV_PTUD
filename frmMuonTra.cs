@@ -173,10 +173,6 @@ namespace PTUD_QLTV
             grdDSTLmuon.DataSource = dtDSTL;
 
             grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; 
-      /*
-            btngrdXoa.Text = "Xóa"; //đặt tên cột
-            grdDSTLmuon.Columns["btngrdXoa"].DisplayIndex = 0;
-            grdDSTLmuon.Columns["btngrdXoa"].FillWeight = 60;*/
         }
 
         private void grdDSTLmuon_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -406,16 +402,7 @@ namespace PTUD_QLTV
                 da.Fill(dtDSTL);
 
                 grdDSTLmuon.DataSource = dtDSTL;
-                grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                /*
-                //Đặt lại tiêu đề cột
-                if(dtDSTL.Columns.Contains("Ma_Tai_Lieu"))
-                    dtDSTL.Columns["Ma_Tai_Lieu"].ColumnName = "Mã tài liệu";
-                if (dtDSTL.Columns.Contains("Ten_TTTL"))
-                    dtDSTL.Columns["Ten_TTTL"].ColumnName = "Tên tài liệu";
-                if (dtDSTL.Columns.Contains("Mo_Ta"))
-                    dtDSTL.Columns["Mo_Ta"].ColumnName = "Mô tả";
-                */
+                grdDSTLmuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
@@ -456,12 +443,14 @@ namespace PTUD_QLTV
         }
         private void grdDSPM_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex >= 0 && grdDSPM.Columns[e.ColumnIndex].Name == "btngrdDetail")
-            {                 
+            if (grdDSPM.CurrentRow != null && grdDSPM.CurrentRow.Index >= 0)
+            {
                 string maPM = grdDSPM.Rows[e.RowIndex].Cells["Ma_Phieu_Muon"].Value.ToString();
                 NapCT();
                 KhoaONhapLieu();
-            }    
+            }
+            else
+                return;
         } 
        
         private void KhoaChucNangbtn()
@@ -624,21 +613,15 @@ namespace PTUD_QLTV
             NapCT();
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
+        private void btnBack_Click(object sender, EventArgs e)
         {
             comTruong.SelectedIndex = -1;
             comGT.SelectedIndex = -1;
             LoadgrdDSPM();
             grdDSPM.Refresh();
+
             ResetForm();
         }
-
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            ResetForm();
-        }
-
-
     }
 
 }

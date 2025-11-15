@@ -122,8 +122,8 @@ namespace PTUD_QLTV
             cboCD.Enabled = true;
             txtMaCuon.Enabled = true;
             txtTinhTrang.Enabled = true;
-            rabtnTrue.Enabled = true;
-            rabtnFalse.Enabled = true;
+            //rabtnTrue.Enabled = true;
+            //rabtnFalse.Enabled = true;
 
             grdListTG.ReadOnly = false;
             grdListCuon.ReadOnly = false;
@@ -151,8 +151,8 @@ namespace PTUD_QLTV
             cboCD.Enabled = false;
             txtMaCuon.Enabled = false;
             txtTinhTrang.Enabled = false;
-            rabtnTrue.Enabled = false;
-            rabtnFalse.Enabled = false;
+            //rabtnTrue.Enabled = false;
+            //rabtnFalse.Enabled = false;
 
             grdListCuon.ReadOnly = true;
             if (grdListCuon.Columns.Contains("btngrdXoa"))
@@ -172,8 +172,8 @@ namespace PTUD_QLTV
             cboCD.SelectedIndex = -1;
             txtMaCuon.Clear();
             txtTinhTrang.Clear();
-            rabtnTrue.Checked = false;
-            rabtnFalse.Checked = false;
+            //rabtnTrue.Checked = false;
+            //rabtnFalse.Checked = false;
 
             dtCuon.Clear();
             grdListCuon.DataSource = dtCuon;
@@ -190,7 +190,7 @@ namespace PTUD_QLTV
             btnLuu.Visible = true;
             btnLuu.Enabled = true;
         }
-
+        /*
         private void btnThem_Click(object sender, EventArgs e)
         {
             string maCuon = txtMaCuon.Text.Trim();
@@ -214,7 +214,7 @@ namespace PTUD_QLTV
             txtTinhTrang.Clear();
             rabtnTrue.Checked = false;
             rabtnFalse.Checked = false;
-        }
+        }*/
         private void btnSua_Click(object sender, EventArgs e)
         {
             MoKhoaONhapLieu();

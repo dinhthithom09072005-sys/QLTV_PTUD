@@ -24,7 +24,7 @@ namespace PTUD_QLTV
 
         private void danhMụcĐộcGiảToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-
+            LoadForm(new frmNXB());
         }
 
         private void hệThốngToolStripMenuItem_Click(object sender, EventArgs e)
@@ -87,6 +87,26 @@ namespace PTUD_QLTV
         private void tiêuĐềTàiLiệuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadForm(new frmTaiLieu());
+        }
+
+        private void danhMụcĐộcGiảToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm(new frmDMDG());
+        }
+
+        private void DMTGToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm (new frmTG());
+        }
+
+        private void DMNXBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm (new frmNXB());
+        }
+
+        private void danhMụcThủThưToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadForm (new frmDMTT());
         }
     }
 }

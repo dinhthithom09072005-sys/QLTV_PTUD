@@ -29,6 +29,9 @@ namespace PTUD_QLTV
             dtpNgayPhat.Value = DateTime.Now;
             btnSua.Enabled = false;
             btnXoa.Enabled = false;
+            btnLuu.Visible = true;
+            btnCapnhat.Visible = false;
+            btnLuu.Enabled = true;
 
             str = "Data Source = LAPTOP-W3DTHM; Initial Catalog = QLTV; Integrated Security = True; Encrypt = False";
             conn = new SqlConnection(str);
@@ -152,6 +155,7 @@ namespace PTUD_QLTV
             grdCTPP.AutoGenerateColumns = true; //cho phép tự sinh cột
             grdCTPP.DataSource = dtCTPP;
 
+            grdCTPP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             if (grdCTPP.Columns.Contains("Ma_Tai_Lieu"))
                 grdCTPP.Columns["Ma_Tai_Lieu"].HeaderText = "Mã TL";
             if (grdCTPP.Columns.Contains("Ten_Vi_Pham"))
@@ -172,12 +176,6 @@ namespace PTUD_QLTV
 
             if (grdCTPP.Columns.Contains("Ma_Vi_Pham"))
                 grdCTPP.Columns["Ma_Vi_Pham"].Visible = false;
-
-            // Chỉnh sửa kích thước từng cột
-            grdCTPP.Columns["Ma_Tai_Lieu"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            grdCTPP.Columns["Ten_Vi_Pham"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            grdCTPP.Columns["Nop_Phat"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            grdCTPP.Columns["Mo_Ta"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
         }
         private string TaoMaPPTuDong()
@@ -304,7 +302,7 @@ namespace PTUD_QLTV
                     dtCTPP.Columns.Add("Ma_Vi_Pham", typeof(string));
 
                 grdCTPP.DataSource = dtCTPP;
-                grdCTPP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                grdCTPP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
                 // Đặt lại tiêu đề cột
                 if (grdCTPP.Columns.Contains("Ma_Tai_Lieu"))
